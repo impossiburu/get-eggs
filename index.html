@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Учёт яиц</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #fff4d6 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #dff7ed 0%, transparent 35%),
+        #f6f7f9;
+      color: #1f2937;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 35px;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      border-radius: 18px;
+      font-size: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .date {
+      color: #6b7280;
+      font-size: 14px;
+      background: rgba(255,255,255,.7);
+      padding: 10px 15px;
+      border-radius: 12px;
+    }
+
+    /* Основные карточки */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 15px 40px rgba(31, 41, 55, .07);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      right: -30px;
+      top: -30px;
+      opacity: .12;
+    }
+
+    .total::after {
+      background: #f59e0b;
+    }
+
+    .available::after {
+      background: #10b981;
+    }
+
+    .reserved::after {
+      background: #6366f1;
+    }
+
+    .card-label {
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .number {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+
+    .unit {
+      font-size: 18px;
+      color: #6b7280;
+      margin-left: 5px;
+      font-weight: 500;
+    }
+
+    .icon {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    /* Прогресс */
+
+    .progress-card {
+      margin-bottom: 25px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .progress-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .percent {
+      font-weight: 800;
+      color: #6366f1;
+    }
+
+    .progress {
+      height: 18px;
+      background: #edf0f3;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #818cf8, #6366f1);
+      transition: width .8s ease;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    /* Нижняя часть */
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 750;
+      margin-bottom: 22px;
+    }
+
+    .egg-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #eef0f2;
+    }
+
+    .egg-row:last-child {
+      border-bottom: none;
+    }
+
+    .egg-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .egg-dot {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      background: #fff7df;
+      border-radius: 12px;
+      font-size: 19px;
+    }
+
+    .status {
+      padding: 7px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-green {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .status-yellow {
+      background: #fef3c7;
+      color: #a16207;
+    }
+
+    .status-red {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* Адаптив */
+
+    @media (max-width: 800px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 25px 15px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .number {
+        font-size: 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header>
+      <div class="title">
+        <div class="logo">🥚</div>
+
+        <div>
+          <h1>Учёт яиц</h1>
+          <p class="subtitle">Контроль наличия и бронирований</p>
+        </div>
+      </div>
+
+      <div class="date" id="date"></div>
+    </header>
+
+
+    <!-- Основные показатели -->
+
+    <section class="stats">
+
+      <div class="card stat-card total">
+        <div class="icon">📦</div>
+        <div class="card-label">Всего яиц</div>
+        <div>
+          <span class="number" id="total">120</span>
+          <span class="unit">шт.</span>
+        </div>
+      </div>
+
+      <div class="card stat-card available">
+        <div class="icon">🟢</div>
+        <div class="card-label">Доступно</div>
+        <div>
+          <span class="number" id="available">85</span>
+          <span class="unit">шт.</span>
+        </div>
+      </div>
+
+      <div class="card stat-card reserved">
+        <div class="icon">🔵</div>
+        <div class="card-label">Забронировано</div>
+        <div>
+          <span class="number" id="reserved">35</span>
+          <span class="unit">шт.</span>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- Прогресс бронирования -->
+
+    <section class="card progress-card">
+
+      <div class="progress-header">
+        <div class="progress-title">Загрузка запасов</div>
+        <div class="percent" id="percent">0%</div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="progress-info">
+        <span id="reservedText">35 яиц забронировано</span>
+        <span id="availableText">85 доступно</span>
+      </div>
+
+    </section>
+
+
+    <!-- Дополнительная информация -->
+
+    <section class="bottom">
+
+      <div class="card">
+        <div class="section-title">Статус наличия</div>
+
+        <div class="egg-row">
+          <div class="egg-name">
+            <div class="egg-dot">🥚</div>
+            Доступные яйца
+          </div>
+
+          <span class="status status-green" id="availabilityStatus">
+            В наличии
+          </span>
+        </div>
+
+        <div class="egg-row">
+          <div class="egg-name">
+            <div class="egg-dot">📦</div>
+            Забронированные
+          </div>
+
+          <span class="status status-yellow">
+            Зарезервированы
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+        <div class="section-title">Краткая статистика</div>
+
+        <div class="egg-row">
+          <span>Общий запас</span>
+          <strong><span id="total2">120</span> шт.</strong>
+        </div>
+
+        <div class="egg-row">
+          <span>Доступно сейчас</span>
+          <strong><span id="available2">85</span> шт.</strong>
+        </div>
+
+        <div class="egg-row">
+          <span>Забронировано</span>
+          <strong><span id="reserved2">35</span> шт.</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    // ==========================================
+    // НАСТРОЙКИ
+    // ==========================================
+
+    const total = 120;       // Всего яиц
+    const reserved = 100;     // Забронировано
+    const available = total - reserved;
+
+
+    // ==========================================
+    // ВЫВОД ДАННЫХ
+    // ==========================================
+
+    document.getElementById("total").textContent = total;
+    document.getElementById("reserved").textContent = reserved;
+    document.getElementById("available").textContent = available;
+
+    document.getElementById("total2").textContent = total;
+    document.getElementById("reserved2").textContent = reserved;
+    document.getElementById("available2").textContent = available;
+
+
+    // ==========================================
+    // ПРОГРЕСС
+    // ==========================================
+
+    const percent = total > 0
+      ? Math.round((reserved / total) * 100)
+      : 0;
+
+    document.getElementById("percent").textContent = percent + "%";
+    document.getElementById("progressBar").style.width = percent + "%";
+
+    document.getElementById("reservedText").textContent =
+      reserved + " яиц забронировано";
+
+    document.getElementById("availableText").textContent =
+      available + " доступно";
+
+
+    // ==========================================
+    // СТАТУС
+    // ==========================================
+
+    const status = document.getElementById("availabilityStatus");
+
+    if (available === 0) {
+      status.textContent = "Нет в наличии";
+      status.className = "status status-red";
+    } else if (available < total * 0.2) {
+      status.textContent = "Мало осталось";
+      status.className = "status status-yellow";
+    } else {
+      status.textContent = "В наличии";
+      status.className = "status status-green";
+    }
+
+
+    // ==========================================
+    // ТЕКУЩАЯ ДАТА
+    // ==========================================
+
+    const today = new Date();
+
+    document.getElementById("date").textContent =
+      today.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+  </script>
+
+</body>
+</html>
