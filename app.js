@@ -1,4 +1,4 @@
-const total = 10;
+const total = 0;
     const reserved = 0;
     const available = total - reserved;
 
