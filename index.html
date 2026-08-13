@@ -313,7 +313,7 @@
         <div class="icon">📦</div>
         <div class="card-label">Всего яиц</div>
         <div>
-          <span class="number" id="total"></span>
+          <span class="number" id="total">120</span>
           <span class="unit">шт.</span>
         </div>
       </div>
@@ -322,7 +322,7 @@
         <div class="icon">🟢</div>
         <div class="card-label">Доступно</div>
         <div>
-          <span class="number" id="available"></span>
+          <span class="number" id="available">85</span>
           <span class="unit">шт.</span>
         </div>
       </div>
@@ -331,7 +331,7 @@
         <div class="icon">🔵</div>
         <div class="card-label">Забронировано</div>
         <div>
-          <span class="number" id="reserved"></span>
+          <span class="number" id="reserved">35</span>
           <span class="unit">шт.</span>
         </div>
       </div>
@@ -388,13 +388,37 @@
             Зарезервированы
           </span>
         </div>
+
       </div>
+
+
+      <div class="card">
+        <div class="section-title">Краткая статистика</div>
+
+        <div class="egg-row">
+          <span>Общий запас</span>
+          <strong><span id="total2">0</span> шт.</strong>
+        </div>
+
+        <div class="egg-row">
+          <span>Доступно сейчас</span>
+          <strong><span id="available2">0</span> шт.</strong>
+        </div>
+
+        <div class="egg-row">
+          <span>Забронировано</span>
+          <strong><span id="reserved2">0</span> шт.</strong>
+        </div>
+
+      </div>
+
     </section>
 
   </main>
 
 
   <script>
+
     const total = 0;
     const reserved = 0;
     const available = total - reserved;
@@ -441,6 +465,8 @@
         month: "long",
         year: "numeric"
       });
+
   </script>
+
 </body>
 </html>
