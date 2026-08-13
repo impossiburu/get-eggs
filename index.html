@@ -388,49 +388,16 @@
             Зарезервированы
           </span>
         </div>
-
       </div>
-
-
-      <div class="card">
-        <div class="section-title">Краткая статистика</div>
-
-        <div class="egg-row">
-          <span>Общий запас</span>
-          <strong><span id="total2">120</span> шт.</strong>
-        </div>
-
-        <div class="egg-row">
-          <span>Доступно сейчас</span>
-          <strong><span id="available2">85</span> шт.</strong>
-        </div>
-
-        <div class="egg-row">
-          <span>Забронировано</span>
-          <strong><span id="reserved2">35</span> шт.</strong>
-        </div>
-
-      </div>
-
     </section>
 
   </main>
 
 
   <script>
-
-    // ==========================================
-    // НАСТРОЙКИ
-    // ==========================================
-
-    const total = 120;       // Всего яиц
-    const reserved = 100;     // Забронировано
+    const total = 0;
+    const reserved = 0;
     const available = total - reserved;
-
-
-    // ==========================================
-    // ВЫВОД ДАННЫХ
-    // ==========================================
 
     document.getElementById("total").textContent = total;
     document.getElementById("reserved").textContent = reserved;
@@ -439,11 +406,6 @@
     document.getElementById("total2").textContent = total;
     document.getElementById("reserved2").textContent = reserved;
     document.getElementById("available2").textContent = available;
-
-
-    // ==========================================
-    // ПРОГРЕСС
-    // ==========================================
 
     const percent = total > 0
       ? Math.round((reserved / total) * 100)
@@ -458,11 +420,6 @@
     document.getElementById("availableText").textContent =
       available + " доступно";
 
-
-    // ==========================================
-    // СТАТУС
-    // ==========================================
-
     const status = document.getElementById("availabilityStatus");
 
     if (available === 0) {
@@ -476,11 +433,6 @@
       status.className = "status status-green";
     }
 
-
-    // ==========================================
-    // ТЕКУЩАЯ ДАТА
-    // ==========================================
-
     const today = new Date();
 
     document.getElementById("date").textContent =
@@ -489,8 +441,6 @@
         month: "long",
         year: "numeric"
       });
-
   </script>
-
 </body>
 </html>
